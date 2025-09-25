@@ -1,5 +1,4 @@
-Great question 🔥 Let’s break it down step by step.
-You want **upvoting** to influence which notes/handouts are more likely to show up during retrieval.
+
 
 ---
 
