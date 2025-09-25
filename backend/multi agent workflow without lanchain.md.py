@@ -1,3 +1,39 @@
+Perfect 💡 Let’s design the **full backend pseudo-code** that combines everything you’ve been thinking about:
+
+* 🔑 **Auth** → Supabase (JWT-based).
+* 📦 **Storage** → Cloudflare R2 for docs.
+* 🧠 **RAG** → embeddings + vector DB (Milvus/Qdrant).
+* 💼 **Career Agent** → function-calling with LinkedIn/GitHub/Search MCP tools.
+* ⚡ **Caching** → Redis (response + embedding cache).
+* 🚦 **Rate limiting** → token bucket per user.
+* 🔀 **Routing** → Decide if query is study (→ RAG) or career (→ agent).
+
+---
+
+## 🔹 Backend Architecture
+
+```
+FastAPI (or Node/Express)
+│
+├── Auth middleware (Supabase JWT)
+├── Rate limiting (Redis token bucket)
+│
+├── /query   → router (study vs career)
+│    ├── study → RAG pipeline
+│    └── career → Career agent
+│
+├── /upload  → store notes in Cloudflare R2 + embed → vector DB
+│
+├── Cache layer (Redis for responses + embeddings)
+│
+└── Vector DB (Milvus/Qdrant)
+```
+
+---
+
+## 🔹 Pseudo-Code (Python / FastAPI style)
+
+```python
 from fastapi import FastAPI, Request, Depends, HTTPException
 import openai
 from auth import verify_jwt
@@ -126,3 +162,21 @@ async def upload_notes(req: Request):
     insert_document(user_id=req.state.user["id"], text=content, embedding=embedding, url=url)
 
     return {"status": "uploaded", "url": url}
+```
+
+---
+
+## 🔹 Key Features
+
+* **Auth**: Supabase JWT checked on every request.
+* **Rate limiting**: Redis token bucket prevents abuse (e.g., 100 queries/day).
+* **Routing**: Simple function `is_study_query()` decides → RAG or Career Agent.
+* **Caching**: Redis used for query-response + embeddings.
+* **Storage**: R2 stores files; embeddings stored in vector DB.
+* **Career Agent**: Function-calling system, no LangChain needed.
+
+---
+
+⚡ This backend is lean, modular, and scalable. You can host on Render/Modal/RunPod and scale each component separately (RAG workers, Career agent workers, API auth workers).
+
+
