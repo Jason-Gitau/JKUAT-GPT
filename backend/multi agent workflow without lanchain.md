@@ -1,4 +1,4 @@
-Perfect 💡 Let’s design the **full backend pseudo-code** that combines everything you’ve been thinking about:
+
 
 * 🔑 **Auth** → Supabase (JWT-based).
 * 📦 **Storage** → Cloudflare R2 for docs.
